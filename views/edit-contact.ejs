@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Contact</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Contact</h1>
+        <form action="/edit-contact/<%= contact.id %>" method="POST"> <!-- Use contact.id here -->
+            <input type="text" name="name" value="<%= contact.name %>" required>
+            <input type="email" name="email" value="<%= contact.email %>" required>
+            <input type="text" name="phone" value="<%= contact.phone %>" required>
+            <button type="submit">Update Contact</button>
+        </form>
+        <a href="/">Back to Contact List</a>
+    </div>
+</body>
+</html>

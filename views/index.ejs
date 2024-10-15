@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Book</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script defer src="/script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Contact Book</h1>
+        <input type="text" id="search" placeholder="Search Contacts" onkeyup="filterContacts()">
+
+        <a href="/add-contact" class="add-contact-button">Add New Contact</a>
+
+        <div id="alphabet-scroll">
+            <a href="#" onclick="scrollToContact('A')">A</a>
+            <a href="#" onclick="scrollToContact('B')">B</a>
+            <a href="#" onclick="scrollToContact('C')">C</a>
+            <a href="#" onclick="scrollToContact('D')">D</a>
+            <a href="#" onclick="scrollToContact('E')">E</a>
+            <a href="#" onclick="scrollToContact('F')">F</a>
+            <a href="#" onclick="scrollToContact('G')">G</a>
+            <a href="#" onclick="scrollToContact('H')">H</a>
+            <a href="#" onclick="scrollToContact('I')">I</a>
+            <a href="#" onclick="scrollToContact('J')">J</a>
+            <a href="#" onclick="scrollToContact('K')">K</a>
+            <a href="#" onclick="scrollToContact('L')">L</a>
+            <a href="#" onclick="scrollToContact('M')">M</a>
+            <a href="#" onclick="scrollToContact('N')">N</a>
+            <a href="#" onclick="scrollToContact('O')">O</a>
+            <a href="#" onclick="scrollToContact('P')">P</a>
+            <a href="#" onclick="scrollToContact('Q')">Q</a>
+            <a href="#" onclick="scrollToContact('R')">R</a>
+            <a href="#" onclick="scrollToContact('S')">S</a>
+            <a href="#" onclick="scrollToContact('T')">T</a>
+            <a href="#" onclick="scrollToContact('U')">U</a>
+            <a href="#" onclick="scrollToContact('V')">V</a>
+            <a href="#" onclick="scrollToContact('W')">W</a>
+            <a href="#" onclick="scrollToContact('X')">X</a>
+            <a href="#" onclick="scrollToContact('Y')">Y</a>
+            <a href="#" onclick="scrollToContact('Z')">Z</a>
+        </div>
+
+        <div id="contact-list">
+            <% contacts.forEach(contact => { %>
+                <div class="card" id="<%= contact.name.charAt(0).toUpperCase() %>" class="contact-card">
+                    <div class="card-details">
+                        <strong>Name:</strong> <%= contact.name %><br>
+                        <strong>Email:</strong> <%= contact.email %><br>
+                        <strong>Phone:</strong> <%= contact.phone %><br>
+                    </div>
+                    <!-- Edit and Delete buttons removed -->
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <script>
+        // Function to filter contacts based on the search input
+        function filterContacts() {
+            const searchInput = document.getElementById('search').value.toLowerCase();
+            const contactCards = document.querySelectorAll('.contact-card');
+    
+            contactCards.forEach(card => {
+                const contactDetails = card.querySelector('.card-details').innerText.toLowerCase();
+                if (contactDetails.includes(searchInput)) {
+                    card.style.display = ''; // Show the card
+                } else {
+                    card.style.display = 'none'; // Hide the card
+                }
+            });
+        }
+    
+        // Function to scroll to contacts that start with a specific letter
+        function scrollToContact(letter) {
+            const card = document.getElementById(letter);
+            if (card) {
+                card.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
