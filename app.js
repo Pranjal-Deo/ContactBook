@@ -1,15 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid'); // Import uuid
+const mongoose = require('mongoose'); // Import Mongoose
 const app = express();
 const PORT = 3000;
 
-// Sample contact data (replace with your data source)
-let contacts = [
-    { id: uuidv4(), name: 'John Doe', email: 'john@example.com', phone: '123-456-7890' },
-    { id: uuidv4(), name: 'Jane Smith', email: 'jane@example.com', phone: '098-765-4321' },
-];
+// Connect to MongoDB
+mongoose.connect('mongodb+srv://<username>:<password>@cluster.mongodb.net/ContactBook', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('Error connecting to MongoDB:', err));
+
+// Define a schema and model for contacts
+const contactSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    phone: String,
+});
+
+const Contact = mongoose.model('Contact', contactSchema);
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,8 +29,14 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Route for home (contact list)
-app.get('/', (req, res) => {
-    res.render('index', { contacts });
+app.get('/', async (req, res) => {
+    try {
+        const contacts = await Contact.find(); // Fetch all contacts from the database
+        res.render('index', { contacts });
+    } catch (err) {
+        console.error('Error fetching contacts:', err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 // Route for adding contact form
@@ -28,10 +45,16 @@ app.get('/add-contact', (req, res) => {
 });
 
 // Route for handling the form submission
-app.post('/add-contact', (req, res) => {
+app.post('/add-contact', async (req, res) => {
     const { name, email, phone } = req.body;
-    contacts.push({ id: uuidv4(), name, email, phone }); // Add unique ID here
-    res.redirect('/');
+    try {
+        const newContact = new Contact({ name, email, phone });
+        await newContact.save(); // Save the new contact to the database
+        res.redirect('/');
+    } catch (err) {
+        console.error('Error adding contact:', err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 // Start the server
